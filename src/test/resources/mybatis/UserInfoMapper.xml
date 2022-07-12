@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.apache.ibatis.study.mapper.UserInfoMapper">
+    <cache eviction="FIFO" flushInterval="60000" size="512" readOnly="false"/>
 
     <select id="selectUser" resultType="org.apache.ibatis.study.entity.UserInfo">
         select *

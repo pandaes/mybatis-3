@@ -14,31 +14,40 @@ import java.io.InputStream;
 
 /**
  * @author liupiao
- * @date 2022/7/12 16:31
+ * @date 2022/7/12 17:43
  * @description
  */
 @Slf4j
-public class UserInfoMapperTest {
+public class CacheTest {
 
     @Test
-    public void testXml() throws IOException {
+    public void testFirstCache() throws IOException {
         String resource = "mybatis/mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession sqlSession = sqlSessionFactory.openSession();
-        UserInfo user = sqlSession.selectOne("org.apache.ibatis.study.mapper.UserInfoMapper.selectUser", 1);
-        log.info("{}", user);
+        UserInfo userInfo = sqlSession.selectOne("org.apache.ibatis.study.mapper.UserInfoMapper.selectUser", 1);
+        log.info(userInfo.toString());
+        UserInfo userInfo2 = sqlSession.selectOne("org.apache.ibatis.study.mapper.UserInfoMapper.selectUser", 1);
+        log.info(userInfo2.toString());
+        log.info("{}", userInfo == userInfo2);
     }
 
     @Test
-    public void testAnnotation() throws IOException {
+    public void testSecondCache() throws IOException {
         String resource = "mybatis/mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession sqlSession = sqlSessionFactory.openSession();
-        UserInfoMapper userMapper = sqlSession.getMapper(UserInfoMapper.class);
-        UserInfo user = userMapper.selectUser1(1);
-        log.info(user.toString());
-    }
+        UserInfo userInfo = sqlSession.selectOne("org.apache.ibatis.study.mapper.UserInfoMapper.selectUser", 1);
+        log.info(userInfo.toString());
+        sqlSession.close();
 
+        SqlSession sqlSession2 = sqlSessionFactory.openSession();
+        UserInfo userInfo2 = sqlSession2.selectOne("org.apache.ibatis.study.mapper.UserInfoMapper.selectUser", 1);
+        log.info("{}", userInfo2);
+        sqlSession2.close();
+
+        log.info("{}", userInfo == userInfo2);
+    }
 }
