@@ -81,6 +81,7 @@ public class CachingExecutor implements Executor {
     BoundSql boundSql = ms.getBoundSql(parameterObject);
     CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
     return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+    // >>org.apache.ibatis.executor.CachingExecutor#query()
   }
 
   @Override
@@ -101,6 +102,7 @@ public class CachingExecutor implements Executor {
         @SuppressWarnings("unchecked")
         // 从二级缓存中拿
         List<E> list = (List<E>) tcm.getObject(cache, key);
+        // >>org.apache.ibatis.cache.TransactionalCacheManager#getObject()
         if (list == null) {
           list = delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
           // 存放到二级缓存当中

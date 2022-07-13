@@ -39,8 +39,11 @@ public class CacheTest {
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         // >>org.apache.ibatis.session.SqlSessionFactoryBuilder#build()
+
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserInfo userInfo = sqlSession.selectOne("org.apache.ibatis.study.mapper.UserInfoMapper.selectUser", 1);
+        // >>org.apache.ibatis.session.defaults.DefaultSqlSession#selectOne()
+
         log.info(userInfo.toString());
         sqlSession.close();
 

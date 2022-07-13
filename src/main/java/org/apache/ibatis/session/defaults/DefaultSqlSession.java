@@ -75,6 +75,7 @@ public class DefaultSqlSession implements SqlSession {
   public <T> T selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
     List<T> list = this.<T>selectList(statement, parameter);
+    // >>org.apache.ibatis.session.defaults.DefaultSqlSession#selectList()
     if (list.size() == 1) {
       return list.get(0);
     } else if (list.size() > 1) {
@@ -139,6 +140,7 @@ public class DefaultSqlSession implements SqlSession {
   @Override
   public <E> List<E> selectList(String statement, Object parameter) {
     return this.selectList(statement, parameter, RowBounds.DEFAULT);
+    // >>org.apache.ibatis.session.defaults.DefaultSqlSession#selectList()
   }
 
   @Override
@@ -146,6 +148,7 @@ public class DefaultSqlSession implements SqlSession {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
+      // >>org.apache.ibatis.executor.CachingExecutor#query()
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
     } finally {

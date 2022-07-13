@@ -33,10 +33,14 @@ public class TransactionalCacheManager {
 
   public Object getObject(Cache cache, CacheKey key) {
     return getTransactionalCache(cache).getObject(key);
+    // >>org.apache.ibatis.cache.TransactionalCacheManager#getTransactionalCache()
+    // >>org.apache.ibatis.cache.decorators.TransactionalCache#getObject()
   }
   
   public void putObject(Cache cache, CacheKey key, Object value) {
+    // 获取 事物功能的 Cache 并存放
     getTransactionalCache(cache).putObject(key, value);
+    // >>org.apache.ibatis.cache.decorators.TransactionalCache#putObject()
   }
 
   public void commit() {
@@ -54,6 +58,7 @@ public class TransactionalCacheManager {
   private TransactionalCache getTransactionalCache(Cache cache) {
     TransactionalCache txCache = transactionalCaches.get(cache);
     if (txCache == null) {
+      // 为了方便事物 再包装了一层事物功能(装饰器模式)
       txCache = new TransactionalCache(cache);
       transactionalCaches.put(cache, txCache);
     }
