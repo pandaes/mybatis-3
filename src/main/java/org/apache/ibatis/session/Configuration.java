@@ -92,7 +92,28 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
- * @author Clinton Begin
+ * 全局配置文件 configuration
+ *
+ * mybatis-config.xml 中解析                   mapper.xml 中解析
+ *           Properties *                   * MapperRegistry     * id
+ *    TypeAliasRegistry *                   * ResultMap          * resultMaps
+ *  TypeHandlerRegistry *** Configuration *** MappedStatements *** sqlSource
+ *     InterceptorChain *                   * Cache              * keyProperties
+ *           全局配置属性 *                                        * keyColumns
+ *
+ * 从 mybatis-config.xml 中解析出:
+ * Properties:内部主要为 jdbc.properties
+ * TypeAliasRegistry: 类型别名注册器 数据库类型 -> java字段类型 映射关系
+ * TypeHandlerRegistry: 类型转换注册器 注册如何将数据库类型的值 转为 java字段类型值
+ * InterceptorChain: 拦截器
+ * 全局配置属性: 例如数据库配置 setting配置...
+ *
+ * 从 mapper.xml 中解析出:
+ * MapperRegistry: Mapper.class 注册到 MapperRegistry 中,映射成为一个 MapperProxyFactory 对象,为 Mapper 创建代理对象
+ * ResultMap: 字段映射 数据库字段 -> java字段 映射关系
+ * MappedStatements: Mapper.xml 配置文件解析成 MappedStatement 对象,保存到 MappedStatements 中
+ * Cache: 二级缓存配置
+ *
  */
 public class Configuration {
 

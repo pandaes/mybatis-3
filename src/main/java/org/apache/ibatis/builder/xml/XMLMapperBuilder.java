@@ -114,8 +114,9 @@ public class XMLMapperBuilder extends BaseBuilder {
       }
       builderAssistant.setCurrentNamespace(namespace);
       cacheRefElement(context.evalNode("cache-ref"));
-      // 解析 cache 标签
+      // 解析并构建 cache 标签
       cacheElement(context.evalNode("cache"));
+      // >>org.apache.ibatis.builder.xml.XMLMapperBuilder#cacheElement()
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
       // 解析 resultMap 标签
       resultMapElements(context.evalNodes("/mapper/resultMap"));
@@ -212,14 +213,19 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (context != null) {
       String type = context.getStringAttribute("type", "PERPETUAL");
       Class<? extends Cache> typeClass = typeAliasRegistry.resolveAlias(type);
+      // 清除策略 LRU FIFO SOFT WEAK
       String eviction = context.getStringAttribute("eviction", "LRU");
       Class<? extends Cache> evictionClass = typeAliasRegistry.resolveAlias(eviction);
       Long flushInterval = context.getLongAttribute("flushInterval");
       Integer size = context.getIntAttribute("size");
+      // 是否只读[true: 如果缓存命中则返回的是同一个对象 不会进行序列化]
       boolean readWrite = !context.getBooleanAttribute("readOnly", false);
+      // 当在缓存中找不到元素时设置缓存键的锁定 其他线程等待此元素被填充而不是命中数据库
       boolean blocking = context.getBooleanAttribute("blocking", false);
       Properties props = context.getChildrenAsProperties();
+      // 构建缓存
       builderAssistant.useNewCache(typeClass, evictionClass, flushInterval, size, readWrite, blocking, props);
+      // >>org.apache.ibatis.builder.MapperBuilderAssistant#useNewCache()
     }
   }
 

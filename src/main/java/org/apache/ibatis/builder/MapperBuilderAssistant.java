@@ -128,6 +128,32 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean readWrite,
       boolean blocking,
       Properties props) {
+    /**
+     * Cache 创建采用了 装饰器+责任链 模式
+     *
+     *         * PerpetualCache    * FifoCache
+     * Cache ***                   * LoggingCache
+     *         * List decorators *** LruCache
+     *                             * ScheduledCache
+     *                             * SerializedCache
+     *                             * SoftCache
+     *                             * SynchronizedCache
+     *                             * WeakCache
+     *                             * BlockingCache
+     *
+     * PerpetualCache: Cache 实现类,默认的二级缓存实现类
+     *
+     * List decorators:
+     * FifoCache: 先进先出算法,缓存回收策略
+     * LoggingCache: 输出缓存命中的日志信息
+     * LruCache: 最近最少使用算法,缓存回收策略
+     * ScheduledCache: 调度缓存,负责定时清空缓存
+     * SerializedCache: 缓存序列化和反序列化存储
+     * SoftCache: 基于软引用实现的缓存管理策略
+     * SynchronizedCache: 同步的缓存装饰器,用于防止多线程并发访问
+     * WeakCache: 基于弱引用实现的缓存管理策略
+     * BlockingCache: 防穿透
+     */
     Cache cache = new CacheBuilder(currentNamespace)
         .implementation(valueOrDefault(typeClass, PerpetualCache.class))
         .addDecorator(valueOrDefault(evictionClass, LruCache.class))
@@ -137,7 +163,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .blocking(blocking)
         .properties(props)
         .build();
+    // >>org.apache.ibatis.mapping.CacheBuilder#build()
+
+    // 加到全局缓存配置中 key:mapper name space value:cache config
     configuration.addCache(cache);
+    // >>org.apache.ibatis.session.Configuration#addCache()
     currentCache = cache;
     return cache;
   }

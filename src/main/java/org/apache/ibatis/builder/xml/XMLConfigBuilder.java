@@ -99,6 +99,9 @@ public class XMLConfigBuilder extends BaseBuilder {
     // 解析根节点
     parseConfiguration(parser.evalNode("/configuration"));
     // >>org.apache.ibatis.builder.xml.XMLConfigBuilder#parseConfiguration()
+
+    // 不管采用那种方式解析,最终都解析为全局配置文件 Configuration
+    // >>org.apache.ibatis.session.Configuration
     return configuration;
   }
 

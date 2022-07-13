@@ -91,16 +91,23 @@ public class CacheBuilder {
 
   public Cache build() {
     setDefaultImplementations();
+    // 创建默认实现类 PerpetualCache.class (如果是手动注入了二级缓存实现类则创建自己实现的)
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
     // issue #352, do not apply decorators to custom caches
+    // 如果是默认实现类 则继续进行包装
     if (PerpetualCache.class.equals(cache.getClass())) {
+      // 遍历所有的 decorators(装饰器模式) 这里只有一个内存淘汰策略功能
       for (Class<? extends Cache> decorator : decorators) {
+        // 进行外层的功能包装(装饰器模式)
         cache = newCacheDecoratorInstance(decorator, cache);
         setCacheProperties(cache);
       }
+      // 进行默认的功能包装(装饰器默认)
       cache = setStandardDecorators(cache);
+      // >>org.apache.ibatis.mapping.CacheBuilder#setStandardDecorators()
     } else if (!LoggingCache.class.isAssignableFrom(cache.getClass())) {
+      // 如果是自己实现的二级缓存 则只需要包装 日志功能
       cache = new LoggingCache(cache);
     }
     return cache;
@@ -121,16 +128,23 @@ public class CacheBuilder {
       if (size != null && metaCache.hasSetter("size")) {
         metaCache.setValue("size", size);
       }
+      // 缓存有效时间
       if (clearInterval != null) {
+        // 包装定时任务功能(装饰器模式)
         cache = new ScheduledCache(cache);
         ((ScheduledCache) cache).setClearInterval(clearInterval);
       }
+      // 命中缓存 返回的 clone 对象 readWrite = !readOnly
       if (readWrite) {
+        // 包装序列化类功能(装饰器模式)
         cache = new SerializedCache(cache);
       }
+      // 包装日志功能(装饰器模式)
       cache = new LoggingCache(cache);
+      // 包装锁功能(装饰器模式)
       cache = new SynchronizedCache(cache);
       if (blocking) {
+        // 包装 Blocking 功能(装饰器模式)
         cache = new BlockingCache(cache);
       }
       return cache;
