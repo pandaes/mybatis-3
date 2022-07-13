@@ -96,13 +96,16 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
+    // 解析根节点
     parseConfiguration(parser.evalNode("/configuration"));
+    // >>org.apache.ibatis.builder.xml.XMLConfigBuilder#parseConfiguration()
     return configuration;
   }
 
   private void parseConfiguration(XNode root) {
     try {
       //issue #117 read properties first
+      // 解析 ...
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
@@ -116,7 +119,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       environmentsElement(root.evalNode("environments"));
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
       typeHandlerElement(root.evalNode("typeHandlers"));
+      // 解析 mappers
       mapperElement(root.evalNode("mappers"));
+      // >>org.apache.ibatis.builder.xml.XMLConfigBuilder#mapperElement()
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
     }
@@ -363,14 +368,18 @@ public class XMLConfigBuilder extends BaseBuilder {
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
         } else {
+          // resource[mapper.xml] | url[远程路径] | class[注解]
           String resource = child.getStringAttribute("resource");
           String url = child.getStringAttribute("url");
           String mapperClass = child.getStringAttribute("class");
+          // 根据 mybatis-config.xml mappers 中配置的去找到该 mapper
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
             InputStream inputStream = Resources.getResourceAsStream(resource);
+            // 装载到 xml mapper builder 中解析
             XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
             mapperParser.parse();
+            // >>org.apache.ibatis.builder.xml.XMLMapperBuilder#parse()
           } else if (resource == null && url != null && mapperClass == null) {
             ErrorContext.instance().resource(url);
             InputStream inputStream = Resources.getUrlAsStream(url);

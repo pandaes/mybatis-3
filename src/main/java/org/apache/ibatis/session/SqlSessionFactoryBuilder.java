@@ -60,8 +60,12 @@ public class SqlSessionFactoryBuilder {
     }
   }
 
+  /**
+   * 解析 mybatis-config.xml
+   */
   public SqlSessionFactory build(InputStream inputStream) {
     return build(inputStream, null, null);
+    // >>org.apache.ibatis.session.SqlSessionFactoryBuilder#build()
   }
 
   public SqlSessionFactory build(InputStream inputStream, String environment) {
@@ -74,8 +78,11 @@ public class SqlSessionFactoryBuilder {
 
   public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
     try {
+      // new 一个 xml 解析器
       XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);
+      // 开始解析
       return build(parser.parse());
+      // >>org.apache.ibatis.builder.xml.XMLConfigBuilder#parse()
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error building SqlSession.", e);
     } finally {

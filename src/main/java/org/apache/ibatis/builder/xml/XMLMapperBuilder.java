@@ -89,7 +89,9 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   public void parse() {
     if (!configuration.isResourceLoaded(resource)) {
+      // 解析根节点
       configurationElement(parser.evalNode("/mapper"));
+      // >>org.apache.ibatis.builder.xml.XMLMapperBuilder#configurationElement()
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
     }
@@ -105,17 +107,23 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   private void configurationElement(XNode context) {
     try {
+      // 命名空间 指向的 mapper
       String namespace = context.getStringAttribute("namespace");
       if (namespace == null || namespace.equals("")) {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
       builderAssistant.setCurrentNamespace(namespace);
       cacheRefElement(context.evalNode("cache-ref"));
+      // 解析 cache 标签
       cacheElement(context.evalNode("cache"));
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
+      // 解析 resultMap 标签
       resultMapElements(context.evalNodes("/mapper/resultMap"));
+      // 解析 sql 标签
       sqlElement(context.evalNodes("/mapper/sql"));
+      // 解析 sql 语句, 构建 Statement
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
+      // >>org.apache.ibatis.builder.xml.XMLMapperBuilder#buildStatementFromContext()
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. The XML location is '" + resource + "'. Cause: " + e, e);
     }
@@ -125,14 +133,18 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (configuration.getDatabaseId() != null) {
       buildStatementFromContext(list, configuration.getDatabaseId());
     }
+    // 构建 Statement 内部存放 sql 信息
     buildStatementFromContext(list, null);
+    // >>org.apache.ibatis.builder.xml.XMLMapperBuilder#buildStatementFromContext()
   }
 
   private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
     for (XNode context : list) {
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context, requiredDatabaseId);
       try {
+        // 解析每一条语句
         statementParser.parseStatementNode();
+        // >>org.apache.ibatis.builder.xml.XMLStatementBuilder#parseStatementNode()
       } catch (IncompleteElementException e) {
         configuration.addIncompleteStatement(statementParser);
       }

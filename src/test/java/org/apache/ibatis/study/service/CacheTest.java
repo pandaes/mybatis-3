@@ -38,6 +38,7 @@ public class CacheTest {
         String resource = "mybatis/mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        // >>org.apache.ibatis.session.SqlSessionFactoryBuilder#build()
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserInfo userInfo = sqlSession.selectOne("org.apache.ibatis.study.mapper.UserInfoMapper.selectUser", 1);
         log.info(userInfo.toString());
