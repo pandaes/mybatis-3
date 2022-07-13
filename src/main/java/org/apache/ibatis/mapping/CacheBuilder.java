@@ -144,7 +144,7 @@ public class CacheBuilder {
       // 包装锁功能(装饰器模式)
       cache = new SynchronizedCache(cache);
       if (blocking) {
-        // 包装 Blocking 功能(装饰器模式)
+        // 包装防止缓存穿透功能(装饰器模式)
         cache = new BlockingCache(cache);
       }
       return cache;

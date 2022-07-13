@@ -143,16 +143,16 @@ public class MapperBuilderAssistant extends BaseBuilder {
      *
      * PerpetualCache: Cache 实现类,默认的二级缓存实现类
      *
-     * List decorators:
-     * FifoCache: 先进先出算法,缓存回收策略
-     * LoggingCache: 输出缓存命中的日志信息
-     * LruCache: 最近最少使用算法,缓存回收策略
-     * ScheduledCache: 调度缓存,负责定时清空缓存
-     * SerializedCache: 缓存序列化和反序列化存储
-     * SoftCache: 基于软引用实现的缓存管理策略
-     * SynchronizedCache: 同步的缓存装饰器,用于防止多线程并发访问
-     * WeakCache: 基于弱引用实现的缓存管理策略
-     * BlockingCache: 防穿透
+     * List decorators[这里装饰器的构造方法都必须传入一个具体的 Cache 实现类]:
+     * FifoCache: 先进先出算法,缓存回收策略 功能
+     * LoggingCache: 输出缓存命中的日志信息 功能
+     * LruCache: 最近最少使用算法,缓存回收策略 功能
+     * ScheduledCache: 调度缓存,负责定时清空缓存 功能
+     * SerializedCache: 缓存序列化和反序列化存储 功能
+     * SoftCache: 基于软引用实现的缓存管理策略 功能
+     * SynchronizedCache: 同步的缓存装饰器,用于防止多线程并发访问 功能
+     * WeakCache: 基于弱引用实现的缓存管理策略 功能
+     * BlockingCache: 防穿透 功能
      */
     Cache cache = new CacheBuilder(currentNamespace)
         .implementation(valueOrDefault(typeClass, PerpetualCache.class))
