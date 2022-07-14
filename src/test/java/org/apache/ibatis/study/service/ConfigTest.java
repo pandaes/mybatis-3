@@ -28,8 +28,6 @@ public class ConfigTest {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserInfo userInfo = sqlSession.selectOne("org.apache.ibatis.study.mapper.UserInfoMapper.selectUser", 1);
         log.info(userInfo.toString());
-        UserInfo userInfo2 = sqlSession.selectOne("org.apache.ibatis.study.mapper.UserInfoMapper.selectUser", 1);
-        log.info(userInfo2.toString());
     }
 
     @Test

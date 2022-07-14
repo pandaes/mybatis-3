@@ -105,6 +105,8 @@ public class CachingExecutor implements Executor {
         // >>org.apache.ibatis.cache.TransactionalCacheManager#getObject()
         if (list == null) {
           list = delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+          // >>org.apache.ibatis.executor.BaseExecutor#query()
+
           // 存放到二级缓存当中
           tcm.putObject(cache, key, list); // issue #578 and #116
         }
@@ -112,6 +114,7 @@ public class CachingExecutor implements Executor {
       }
     }
     return delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+    // >>org.apache.ibatis.executor.BaseExecutor#query()
   }
 
   @Override

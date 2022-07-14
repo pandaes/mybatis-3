@@ -90,6 +90,7 @@ public class CacheBuilder {
   }
 
   public Cache build() {
+    // 设置默认的 Cache 实现类 PerpetualCache.class
     setDefaultImplementations();
     // 创建默认实现类 PerpetualCache.class (如果是手动注入了二级缓存实现类则创建自己实现的)
     Cache cache = newBaseCacheInstance(implementation, id);
