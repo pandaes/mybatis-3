@@ -106,7 +106,6 @@ public class CachingExecutor implements Executor {
         if (list == null) {
           list = delegate.<E> query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
           // >>org.apache.ibatis.executor.BaseExecutor#query()
-
           // 存放到二级缓存当中
           tcm.putObject(cache, key, list); // issue #578 and #116
         }

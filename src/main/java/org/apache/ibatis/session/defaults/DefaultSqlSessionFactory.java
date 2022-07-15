@@ -45,6 +45,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
   @Override
   public SqlSession openSession() {
     return openSessionFromDataSource(configuration.getDefaultExecutorType(), null, false);
+    // >>org.apache.ibatis.session.defaults.DefaultSqlSessionFactory#openSessionFromDataSource()
   }
 
   @Override
@@ -92,8 +93,11 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     try {
       final Environment environment = configuration.getEnvironment();
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
+      // 创建 Transaction 并且存放 Connection 和 DataSource 信息
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
       final Executor executor = configuration.newExecutor(tx, execType);
+      // >>org.apache.ibatis.session.Configuration#newExecutor()
+      // 构造默认的 SqlSession
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
       closeTransaction(tx); // may have fetched a connection so lets call close()

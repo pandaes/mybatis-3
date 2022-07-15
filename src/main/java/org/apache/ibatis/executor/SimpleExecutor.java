@@ -37,7 +37,9 @@ import java.util.List;
 public class SimpleExecutor extends BaseExecutor {
 
   public SimpleExecutor(Configuration configuration, Transaction transaction) {
+    // 调用 BaseExecutor 执行器
     super(configuration, transaction);
+    // >>org.apache.ibatis.executor.BaseExecutor
   }
 
   @Override

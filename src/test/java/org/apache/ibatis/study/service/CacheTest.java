@@ -41,6 +41,8 @@ public class CacheTest {
         // >>org.apache.ibatis.session.SqlSessionFactoryBuilder#build()
 
         SqlSession sqlSession = sqlSessionFactory.openSession();
+        // >>org.apache.ibatis.session.defaults.DefaultSqlSessionFactory#openSession()
+
         UserInfo userInfo = sqlSession.selectOne("org.apache.ibatis.study.mapper.UserInfoMapper.selectUser", 1);
         // >>org.apache.ibatis.session.defaults.DefaultSqlSession#selectOne()
 

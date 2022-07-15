@@ -594,12 +594,18 @@ public class Configuration {
     } else if (ExecutorType.REUSE == executorType) {
       executor = new ReuseExecutor(this, transaction);
     } else {
+      // 普通 Sql 执行器
       executor = new SimpleExecutor(this, transaction);
+      // >>org.apache.ibatis.executor.SimpleExecutor
     }
+    // 是否开启缓存
     if (cacheEnabled) {
+      // 如果开启了缓存则将 Executor 存放到 Cache 中
       executor = new CachingExecutor(executor);
     }
+    // 执行插件链
     executor = (Executor) interceptorChain.pluginAll(executor);
+    // >>org.apache.ibatis.plugin.InterceptorChain#pluginAll（）
     return executor;
   }
 
