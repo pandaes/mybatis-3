@@ -1,5 +1,6 @@
 package org.apache.ibatis.study.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.study.entity.UserInfo;
 
@@ -16,4 +17,5 @@ public interface UserInfoMapper {
     @Select("select * from user_info where id = #{id}")
     UserInfo selectUser1(Integer id);
 
+    UserInfo updateUser(@Param("id") Integer id, @Param("userName") String userName);
 }

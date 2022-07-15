@@ -23,6 +23,13 @@
         </environment>
     </environments>
 
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="Oracle" value="oracle"/>
+        <property name="MySQL" value="mysql"/>
+        <property name="DB2" value="d2"/>
+        <property name="PostgreSQL" value="pg"/>
+    </databaseIdProvider>
+
     <mappers>
         <mapper resource="mybatis/UserInfoMapper.xml"/>
     </mappers>

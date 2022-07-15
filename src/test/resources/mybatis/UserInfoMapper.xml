@@ -3,11 +3,24 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.apache.ibatis.study.mapper.UserInfoMapper">
+    <!-- 开启缓存 内存淘汰策略 FIFO -->
     <cache eviction="FIFO" flushInterval="60000" size="512" readOnly="false"/>
 
-    <select id="selectUser" resultType="org.apache.ibatis.study.entity.UserInfo">
+    <select id="selectUser" resultType="org.apache.ibatis.study.entity.UserInfo" databaseId="mysql">
         select *
         from user_info
         where id = #{id}
     </select>
+
+    <select id="selectUser" resultType="org.apache.ibatis.study.entity.UserInfo" databaseId="oracle">
+        select *
+        from user_info
+        where id = #{id}
+    </select>
+
+    <update id="updateUser">
+        update user_info
+        set user_name = #{userName}
+        where id = #{id}
+    </update>
 </mapper>
