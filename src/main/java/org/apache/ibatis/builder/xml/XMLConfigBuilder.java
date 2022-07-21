@@ -121,7 +121,9 @@ public class XMLConfigBuilder extends BaseBuilder {
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
+      // 解析 typeHandler
       typeHandlerElement(root.evalNode("typeHandlers"));
+      // >>org.apache.ibatis.builder.xml.XMLConfigBuilder#typeHandlerElement()
       // 解析 mappers
       mapperElement(root.evalNode("mappers"));
       // >>org.apache.ibatis.builder.xml.XMLConfigBuilder#mapperElement()
@@ -346,10 +348,13 @@ public class XMLConfigBuilder extends BaseBuilder {
         } else {
           String javaTypeName = child.getStringAttribute("javaType");
           String jdbcTypeName = child.getStringAttribute("jdbcType");
+          // 获取类名
           String handlerTypeName = child.getStringAttribute("handler");
           Class<?> javaTypeClass = resolveClass(javaTypeName);
           JdbcType jdbcType = resolveJdbcType(jdbcTypeName);
+          // 别名注册解析为 class
           Class<?> typeHandlerClass = resolveClass(handlerTypeName);
+          // >>org.apache.ibatis.builder.BaseBuilder#resolveClass()
           if (javaTypeClass != null) {
             if (jdbcType == null) {
               typeHandlerRegistry.register(javaTypeClass, typeHandlerClass);
@@ -357,7 +362,9 @@ public class XMLConfigBuilder extends BaseBuilder {
               typeHandlerRegistry.register(javaTypeClass, jdbcType, typeHandlerClass);
             }
           } else {
+            // type handler 注册
             typeHandlerRegistry.register(typeHandlerClass);
+            // >>org.apache.ibatis.type.TypeHandlerRegistry#register()
           }
         }
       }

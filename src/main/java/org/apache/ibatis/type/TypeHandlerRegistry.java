@@ -54,9 +54,11 @@ import org.apache.ibatis.reflection.Jdk;
  */
 public final class TypeHandlerRegistry {
 
+  // JDBC 类型处理器 key: jdbc_type value: handler
   private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new ConcurrentHashMap<Type, Map<JdbcType, TypeHandler<?>>>();
   private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
+  // 所有类型处理器 key: handler.class value: handler
   private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
@@ -330,7 +332,9 @@ public final class TypeHandlerRegistry {
     if (!mappedTypeFound && typeHandler instanceof TypeReference) {
       try {
         TypeReference<T> typeReference = (TypeReference<T>) typeHandler;
+        // 获取到 java 类型,开始注册
         register(typeReference.getRawType(), typeHandler);
+        // >>org.apache.ibatis.type.TypeHandlerRegistry#register()
         mappedTypeFound = true;
       } catch (Throwable t) {
         // maybe users define the TypeReference with a different type and are not assignable, so just ignore it
@@ -348,10 +352,12 @@ public final class TypeHandlerRegistry {
   }
 
   private <T> void register(Type javaType, TypeHandler<? extends T> typeHandler) {
+    // 获取到 @MappedJdbcTypes 注解,找到 JDBC 类型
     MappedJdbcTypes mappedJdbcTypes = typeHandler.getClass().getAnnotation(MappedJdbcTypes.class);
     if (mappedJdbcTypes != null) {
       for (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
         register(javaType, handledJdbcType, typeHandler);
+        // >>org.apache.ibatis.type.TypeHandlerRegistry#register()
       }
       if (mappedJdbcTypes.includeNullJdbcType()) {
         register(javaType, null, typeHandler);
@@ -378,8 +384,10 @@ public final class TypeHandlerRegistry {
         map = new HashMap<JdbcType, TypeHandler<?>>();
         TYPE_HANDLER_MAP.put(javaType, map);
       }
+      // 注册到 type handler map 中 key: jdbc_value value: handler
       map.put(jdbcType, handler);
     }
+    // 注册到 所有类型处理器中 key: handler_class value: handler
     ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);
   }
 
@@ -400,6 +408,7 @@ public final class TypeHandlerRegistry {
     }
     if (!mappedTypeFound) {
       register(getInstance(null, typeHandlerClass));
+      // >>org.apache.ibatis.type.TypeHandlerRegistry#register()
     }
   }
 

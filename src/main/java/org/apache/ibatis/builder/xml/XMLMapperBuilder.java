@@ -133,6 +133,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void buildStatementFromContext(List<XNode> list) {
     if (configuration.getDatabaseId() != null) {
       buildStatementFromContext(list, configuration.getDatabaseId());
+      // >>org.apache.ibatis.builder.xml.XMLMapperBuilder#buildStatementFromContext()
     }
     // 构建 Statement 内部存放 sql 信息
     buildStatementFromContext(list, null);

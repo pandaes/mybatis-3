@@ -114,6 +114,7 @@ public abstract class BaseBuilder {
     }
     try {
       return resolveAlias(alias);
+      // >>org.apache.ibatis.builder.BaseBuilder#resolveAlias()
     } catch (Exception e) {
       throw new BuilderException("Error resolving class. Cause: " + e, e);
     }
@@ -146,6 +147,8 @@ public abstract class BaseBuilder {
   }
 
   protected Class<?> resolveAlias(String alias) {
+    // 解析别名
     return typeAliasRegistry.resolveAlias(alias);
+    // >>org.apache.ibatis.type.TypeAliasRegistry#resolveAlias()
   }
 }
