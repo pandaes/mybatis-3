@@ -77,6 +77,7 @@ public class RoutingStatementHandler implements StatementHandler {
   @Override
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     return delegate.<E>query(statement, resultHandler);
+    // >>org.apache.ibatis.executor.statement.PreparedStatementHandler#query()
   }
 
   @Override

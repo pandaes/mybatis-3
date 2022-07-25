@@ -194,6 +194,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     while (rsw != null && resultMapCount > resultSetCount) {
       ResultMap resultMap = resultMaps.get(resultSetCount);
       handleResultSet(rsw, resultMap, multipleResults, null);
+      // >>org.apache.ibatis.executor.resultset.DefaultResultSetHandler#handleResultSet()
       rsw = getNextResultSet(stmt);
       cleanUpAfterHandlingResultSet();
       resultSetCount++;
@@ -301,6 +302,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         if (resultHandler == null) {
           DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);
           handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, null);
+          // >>org.apache.ibatis.executor.resultset.DefaultResultSetHandler#handleRowValues()
           multipleResults.add(defaultResultHandler.getResultList());
         } else {
           handleRowValues(rsw, resultMap, resultHandler, rowBounds, null);
@@ -328,6 +330,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       handleRowValuesForNestedResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);
     } else {
       handleRowValuesForSimpleResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);
+      // >>org.apache.ibatis.executor.resultset.DefaultResultSetHandler#handleRowValuesForNestedResultMap()
     }
   }
 
@@ -353,6 +356,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     while (shouldProcessMoreRows(resultContext, rowBounds) && rsw.getResultSet().next()) {
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);
       Object rowValue = getRowValue(rsw, discriminatedResultMap);
+      // >>org.apache.ibatis.executor.resultset.DefaultResultSetHandler#getRowValue()
       storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
     }
   }
@@ -399,6 +403,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       boolean foundValues = this.useConstructorMappings;
       if (shouldApplyAutomaticMappings(resultMap, false)) {
         foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
+        // >>org.apache.ibatis.executor.resultset.DefaultResultSetHandler#applyAutomaticMappings()
       }
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;
       foundValues = lazyLoader.size() > 0 || foundValues;
@@ -518,6 +523,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (!autoMapping.isEmpty()) {
       for (UnMappedColumnAutoMapping mapping : autoMapping) {
         final Object value = mapping.typeHandler.getResult(rsw.getResultSet(), mapping.column);
+        // >>org.apache.ibatis.type.BaseTypeHandler#getResult()
         if (value != null) {
           foundValues = true;
         }

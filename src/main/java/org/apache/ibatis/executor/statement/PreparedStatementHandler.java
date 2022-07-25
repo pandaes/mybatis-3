@@ -62,6 +62,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.execute();
     return resultSetHandler.<E> handleResultSets(ps);
+    // >>org.apache.ibatis.executor.resultset.DefaultResultSetHandler#handleResultSets()
   }
 
   @Override

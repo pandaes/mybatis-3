@@ -328,6 +328,7 @@ public abstract class BaseExecutor implements Executor {
     localCache.putObject(key, EXECUTION_PLACEHOLDER);
     try {
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
+      // >>org.apache.ibatis.executor.SimpleExecutor#doQuery()
     } finally {
       localCache.removeObject(key);
     }
